@@ -1,0 +1,15 @@
+/target
+/classes
+/checkouts
+profiles.clj
+pom.xml
+pom.xml.asc
+*.iml
+*.jar
+*.class
+*-key.json
+/.gradle
+/.idea
+/.lein-*
+/.nrepl-port
+__*
