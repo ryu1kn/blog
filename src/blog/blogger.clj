@@ -1,12 +1,12 @@
 (ns blog.blogger
-  (:import [com.google.api.services.blogger BloggerRequestInitializer Blogger$Builder]
+  (:import [com.google.api.services.blogger BloggerRequestInitializer Blogger$Builder Blogger]
            [com.google.api.services.blogger.model Post]
            [com.google.api.client.googleapis.javanet GoogleNetHttpTransport]
            [com.google.api.client.json.jackson2 JacksonFactory]
            [com.google.auth.http HttpCredentialsAdapter]
            [com.google.auth.oauth2 GoogleCredentials]))
 
-(def blogger
+(def ^Blogger blogger
   (.build
     (.setBloggerRequestInitializer
       (Blogger$Builder. (GoogleNetHttpTransport/newTrustedTransport)
