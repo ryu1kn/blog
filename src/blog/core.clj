@@ -22,12 +22,19 @@
   (fn [blogger]
     (-> blogger (.blogs) (.getByUrl name) (.execute))))
 
-(defn publish [blog post]
-  (fn [blogger]
-    (-> blogger (.posts) (.insert (.getId blog) post) (.executeUnparsed) (.parseAsString))))
+(defn publish [post blog blogger]
+  (-> blogger (.posts) (.insert (.getId blog) post) (.executeUnparsed) (.parseAsString)))
+
+; h(g(f(v0, v0), v0), v0)
+(defn comp' [& fs]
+  (fn [v0]
+    (reduce (fn [v f] (f v v0)) v0 (reverse fs))))
+
+(defn only1 [f] (fn [arg0 & _] (f arg0)))
 
 (defn -main [& args]
   (let [blogger (make-blogger)
         post (make-post "My Test Post" "With <b>exciting</b> content!!")
-        get-blog (blog-by-name "https://blog.ryuichi.io")]
-    ((publish (get-blog blogger) post) blogger)))
+        get-blog (blog-by-name "https://blog.ryuichi.io")
+        app (comp' (partial publish post) (only1 get-blog))]
+    (app blogger)))
