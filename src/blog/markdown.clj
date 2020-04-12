@@ -6,5 +6,4 @@
 (def parser (.build (.extensions (Parser/builder) [(TablesExtension/create)])))
 (def renderer (.build (HtmlRenderer/builder)))
 
-(defn render-html [markdown]
-  (.render renderer (.parse parser markdown)))
+(def render-html (comp #(.render renderer %) #(.parse parser %)))
