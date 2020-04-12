@@ -5,4 +5,4 @@
 
 (defn -main [& _]
   (post-article "https://blog.ryuichi.io" {:title "My Test Post 2"
-                                           :content (render-html "With *exciting* content!!")}))
+                                           :content (render-html "```sh\necho hi\n```")}))
