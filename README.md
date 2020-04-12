@@ -12,7 +12,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/application_default_crede
 Then
 
 ```sh
-lein run
+lein run /path/to/article.md
 ```
 
 ## References
