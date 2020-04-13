@@ -26,7 +26,7 @@
 (defn find-top-heading [node]
   (if (and (instance? Heading node) (= 1 (.getLevel node)))
     node
-    (find-top-heading node)))
+    (find-top-heading (.getNext node))))
 
 (defn make-post [article]
   (let [doc (parse article)

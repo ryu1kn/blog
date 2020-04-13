@@ -15,4 +15,7 @@
 (deftest make-post-test
   (testing "Create a post out of markdown"
     (is (= {:title "Title", :content "<p>Content</p>\n"} (make-post "# Title\n\nContent"))))
+
+  (testing "Create a post without title"
+    (is (= {:title "", :content "<p>Content</p>\n"} (make-post "Content"))))
   )
