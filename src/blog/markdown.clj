@@ -31,7 +31,7 @@
 
 (defn make-post [article]
   (let [doc (parse article)
-        first-top-heading (find-top-heading (.getFirstChild doc))
-        title (if first-top-heading (extract-title first-top-heading) "")]
-    (do (if first-top-heading (.unlink first-top-heading))
+        top-heading (find-top-heading (.getFirstChild doc))
+        title (if top-heading (extract-title top-heading) "")]
+    (do (if top-heading (.unlink top-heading))
         {:title title, :content (render doc)})))
