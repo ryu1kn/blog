@@ -2,8 +2,8 @@
   (:import [org.commonmark.parser Parser]
            [org.commonmark.renderer.html HtmlRenderer AttributeProviderFactory AttributeProvider]
            [org.commonmark.ext.gfm.tables TablesExtension]
-           [java.util Map]
-           (org.commonmark.node Heading)))
+           [org.commonmark.node Heading]
+           [java.util Map]))
 
 (def parser (.build (.extensions (Parser/builder) [(TablesExtension/create)])))
 (def parse #(.parse parser %))
@@ -21,11 +21,12 @@
 (def renderer (-> (HtmlRenderer/builder) (.attributeProviderFactory attribute-provider-factory) (.build)))
 (def render #(.render renderer %))
 
-(defn extract-title [node] (-> node (.getFirstChild) (.getLiteral)))
+(defn top-heading? [node] (and (instance? Heading node) (= 1 (.getLevel node))))
+
+(def extract-title (comp #(.getLiteral %) #(.getFirstChild %)))
 
 (defn find-top-heading [node]
-  (if (or (nil? node)
-          (and (instance? Heading node) (= 1 (.getLevel node))))
+  (if (or (nil? node) (top-heading? node))
     node
     (find-top-heading (.getNext node))))
 
