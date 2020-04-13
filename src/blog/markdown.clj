@@ -24,13 +24,14 @@
 (defn extract-title [node] (-> node (.getFirstChild) (.getLiteral)))
 
 (defn find-top-heading [node]
-  (if (and (instance? Heading node) (= 1 (.getLevel node)))
+  (if (or (nil? node)
+          (and (instance? Heading node) (= 1 (.getLevel node))))
     node
     (find-top-heading (.getNext node))))
 
 (defn make-post [article]
   (let [doc (parse article)
         first-top-heading (find-top-heading (.getFirstChild doc))
-        title (extract-title first-top-heading)]
-    (do (.unlink first-top-heading)
+        title (if first-top-heading (extract-title first-top-heading) "")]
+    (do (if first-top-heading (.unlink first-top-heading))
         {:title title, :content (render doc)})))
