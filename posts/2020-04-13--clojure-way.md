@@ -9,10 +9,14 @@
     (-> html-node (.getTextNode) (.getLiteral))
     ```
 
-  * Seems so. Need to repeat `html-node` twice.
+  * Seems so.
 
     ```clojure
     (if html-node (-> html-node (.getTextNode) (.getLiteral)) "")
+
+    ; or
+
+    (#(if % (-> % (.getTextNode) (.getLiteral)) "") html-node)
     ```
 
     cf. in Scala:
