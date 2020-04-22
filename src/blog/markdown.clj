@@ -33,6 +33,7 @@
 (defn make-post [article]
   (let [doc (parse article)
         top-heading (find-top-heading (.getFirstChild doc))
-        title (if top-heading (extract-title top-heading) "")]
+        title (if top-heading (extract-title top-heading) "")
+        post-id (second (re-find #"<!-- POST_ID: ([^\s]+) -->" article))]
     (do (if top-heading (.unlink top-heading))
-        {:title title, :content (render doc)})))
+        {:id post-id :title title, :content (render doc)})))

@@ -14,8 +14,12 @@
 
 (deftest make-post-test
   (testing "Create a post out of markdown"
-    (is (= {:title "Title", :content "<p>Content</p>\n"} (make-post "# Title\n\nContent"))))
+    (is (= {:title "Title", :content "<p>Content</p>\n" :id nil} (make-post "# Title\n\nContent"))))
 
   (testing "Create a post without title"
-    (is (= {:title "", :content "<p>Content</p>\n"} (make-post "Content"))))
+    (is (= {:title "", :content "<p>Content</p>\n" :id nil} (make-post "Content"))))
+
+  (testing "Create a post with post id"
+    (is (= {:title "Title", :content "<p>Content</p>\n<!-- POST_ID: foo -->\n" :id "foo"}
+           (make-post "# Title\n\nContent\n<!-- POST_ID: foo -->"))))
   )

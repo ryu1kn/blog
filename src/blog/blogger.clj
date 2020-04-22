@@ -1,4 +1,5 @@
 (ns blog.blogger
+  (:require [clojure.string :as s])
   (:import [com.google.api.services.blogger BloggerRequestInitializer Blogger$Builder Blogger]
            [com.google.api.services.blogger.model Post]
            [com.google.api.client.googleapis.javanet GoogleNetHttpTransport]
@@ -14,19 +15,25 @@
                         (HttpCredentialsAdapter. (GoogleCredentials/getApplicationDefault)))
       (BloggerRequestInitializer.))))
 
-(defn make-post [post]
+(defn to-blogger-post [post]
   (let [{title :title, content :content} post]
     (-> (Post.) (.setTitle title) (.setContent content))))
 
-(defn blog-by-name [name]
-  (fn [blogger]
-    (-> blogger (.blogs) (.getByUrl name) (.execute))))
+(def blogpost-apis {
+  :create-post (fn [post blog-id blogger]
+                 (-> blogger (.posts) (.insert blog-id post) (.execute)))
+  :update-post (fn [post-id post blog-id blogger]
+                 (-> blogger (.posts) (.update blog-id post-id post) (.execute)))
+  :fetch-posts (fn [blog-id blogger]
+                 (-> blogger (.posts) (.list blog-id) (.execute) (get "items")))
+})
 
-(defn publish [blog post]
-  (fn [blogger]
-    (-> blogger (.posts) (.insert (.getId blog) post) (.executeUnparsed) (.parseAsString))))
-
-(defn post-article [blog-name post]
-  (let [post (make-post post)
-        get-blog (blog-by-name blog-name)]
-    ((publish (get-blog blogger) post) blogger)))
+(defn publish-article [apis blog-id post blogger]
+  (let [{create-post :create-post
+         update-post :update-post
+         fetch-posts :fetch-posts} apis
+        posts-with-id (filter (comp #(s/includes? % (str "<!-- POST_ID: " (:id post) " -->")) #(get % "content")) (fetch-posts blog-id blogger))
+        post-id (#(if (not-empty %) (-> % (first) (get "id"))) posts-with-id)
+        publish (if post-id #(apply update-post (into [post-id] %&)) create-post)
+        ]
+    (publish (to-blogger-post post) blog-id blogger)))
