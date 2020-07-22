@@ -17,7 +17,7 @@
                 :fetch-posts (constantly [])}
           post {:id "my-post-id-002"}]
       (equals "{:id \"my-post-id-002\"} / blog-id / BLOGGER"
-              (publish-article apis "blog-id" post "BLOGGER"))))
+              (publish-article' apis identity "blog-id" post "BLOGGER"))))
 
   (testing "Update post"
     (let [apis {:update-post format-args
@@ -25,5 +25,5 @@
           post {:id "my-post-id-002"}]
       (equals
         "002 / {:id \"my-post-id-002\"} / blog-id / BLOGGER"
-        (publish-article apis "blog-id" post "BLOGGER"))))
-    )
+        (publish-article' apis identity "blog-id" post "BLOGGER"))))
+  )

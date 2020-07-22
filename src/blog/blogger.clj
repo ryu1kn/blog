@@ -28,7 +28,7 @@
                  (-> blogger (.posts) (.list blog-id) (.execute) (get "items")))
 })
 
-(defn publish-article [apis blog-id post blogger]
+(defn publish-article' [apis to-blogger-post blog-id post blogger]
   (let [{create-post :create-post
          update-post :update-post
          fetch-posts :fetch-posts} apis
@@ -37,3 +37,6 @@
         publish (if post-id #(apply update-post (into [post-id] %&)) create-post)
         ]
     (publish (to-blogger-post post) blog-id blogger)))
+
+(defn publish-article [blog-id post]
+  (publish-article' blogpost-apis to-blogger-post blog-id post blogger))
