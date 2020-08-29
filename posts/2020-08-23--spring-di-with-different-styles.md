@@ -44,6 +44,8 @@ Here is my observations on each style.
 
 * Less boilerplate code to define components dependency.
 * Dependency rules are written on each component.
+* Adding a bean is as easy as adding `@Component` (as long as it's in the scan range)
+  * Useful if you don't have ownership for the entire code base?
 
 ### Cons
 
@@ -53,6 +55,7 @@ Here is my observations on each style.
 * Harder to comprehend if the reader is not familiar with Spring.
 * Finer grained control over the dependency definition can become
   tricky and brittle.
+* Can accidentally break the app by your component implicitly picked up (like component in test)
 
 ## Java Config based configuration
 
